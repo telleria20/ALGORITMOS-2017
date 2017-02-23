@@ -1,0 +1,41 @@
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+
+using namespace std;
+void main()
+{
+	float b,area,radio;
+	int a,opcion;
+	do {
+     cout << endl;
+	 cout<<"////////////MENU DE AREAS/////////"<<endl;
+     cout << "1.- Calcular el area del triangulo" << endl;
+     cout << "2.- Calcular el area del cuadrado" << endl;
+     cout << "3.- Calcular el area del circulo" << endl;
+	 cout << "0.- Salir" << endl;
+     cout << "Elige una opcion: "<<endl ;
+	 cin>>opcion;
+	 switch (opcion) {
+	 case 1: cout<<"Ingrese la base del triangulo: ";
+	            cin>>b;
+	            cout<<"Ingrese la altura del triangulo: ";
+	            cin>>a;
+	
+	            area=(b*a)/2;
+		 break;
+	 case 2: cout<<"Ingrese la base del cuadrado: ";
+	            cin>>b;
+				area=a^4;
+		 break;
+	 case 3: cout<<"Ingrese radio: ";
+                cin>>radio;
+                area=3.1416*(radio*radio);
+	 case 0: cout << "Salir";
+			 break;
+	    default: cout << "Opcion invalida" << endl;
+     }
+     cout << "El resultado es " << area << endl;
+	 } while (opcion != 0);
+     getch();
+}
