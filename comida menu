@@ -1,0 +1,61 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include "math.h"
+using namespace std;
+void main()
+{ float cuenta,hamburgesa,hamburgesacqueso,patatas,sodas,malteadas,p1,p2,p3,p4,p5;
+int opcion;
+cuenta=0;
+p1=3;
+p2=5;
+p3=2;
+p4=2.5;
+p5=4;
+do{
+cout<<"Menu"<<endl;
+cout<<"1 Hamburgesa 3 Bs"<<endl;
+cout<<"2 Hamburgesa con queso 5 Bs"<<endl;
+cout<<"3 Patatas fritas 2 Bs"<<endl;
+cout<<"4 Sodas 2.5 Bs"<<endl;
+cout<<"5 Malteadas 4 Bs"<<endl;
+cout<<"6 Cuenta"<<endl;
+cout<<"Ingrese la opcion"<<endl;
+cin>>opcion;
+switch(opcion)
+{
+case 1:
+{ cout<<"Ingrese la cantidad"<<endl;
+cin>>hamburgesa;
+cuenta=hamburgesa*p1+cuenta;
+break;
+}
+case 2:
+{ cout<<"Ingrese la cantidad"<<endl;
+cin>>hamburgesacqueso;
+cuenta=hamburgesacqueso*p2+cuenta;
+break;
+}
+case 3:
+{ cout<<"Ingrese la cantidad"<<endl;
+cin>>patatas;
+cuenta=patatas*p3+cuenta;
+break;
+}
+case 4:
+{ cout<<"Ingrese la cantidad"<<endl;
+cin>>sodas;
+cuenta=sodas*p4+cuenta;
+break;
+}
+case 5:
+{ cout<<"Ingrese la cantidad"<<endl;
+cin>>malteadas;
+cuenta=malteadas*p5+cuenta;
+break;
+}
+}
+}while (opcion<=5);
+cout<<"La cuenta es: "<<cuenta<<endl;
+getch();
+}
