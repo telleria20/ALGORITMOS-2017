@@ -1,0 +1,68 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+using namespace std;
+float fsuma(float a, float b);
+float fresta(float a, float b);
+float fmultiplicacion(float a, float b);
+float fdivision(float a, float b);
+
+using namespace std;
+
+void main()
+{
+  float a, b, r;
+   int opcion;
+   do{
+      cout << "Ingrese a: " ;
+      cin >> a;
+     } while (a<0);
+   do{
+      cout << "Ingrese b: " ;
+      cin >> b;
+     } while (b<0);
+   do {
+      cout << endl;
+      cout << "1.- Suma" << endl;
+      cout << "2.- Resta" << endl;
+      cout << "3.- Producto" << endl;
+      cout << "4.- División" << endl;
+	    cout << "0.- Salir" << endl;
+      cout << "Elige una opcion: " ;
+      cin >> opcion;
+      switch (opcion) {
+	     case 1: r = fsuma(a,b); break;
+	     case 2: r = fresta(a,b); break;
+	     case 3: r = fmultiplicacion(a,b); break;
+	     case 4: r = fdivision(a,b); break;
+		   case 0: cout << "Salir";break;
+	     default: cout << "Opcion invalida" << endl;
+     }
+       cout << "El resultado es " << r << endl;
+	 }  while (opcion != 0);
+     getch();
+}
+float fsuma (float a, float b)
+{ 
+   float r;
+   r=a+b;
+return r;
+}
+float fresta (float a, float b)
+{  
+   float r;
+   r=a-b;
+return r;
+}
+float fmultiplicacion (float a, float b)
+{
+   float r;
+   r=a*b;
+return r;
+}
+float fdivision (float a, float b)
+{
+   float r;
+   r=a/b;
+return r;
+}
