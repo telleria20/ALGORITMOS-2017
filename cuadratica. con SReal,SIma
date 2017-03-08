@@ -1,0 +1,55 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+using namespace std;
+
+void main ()
+
+{
+
+float a,b,c,d,x1,x2;
+cout<<"En una ecuacion cuadratica introducir los valores de a,b y c"<<endl;
+cout<<"Introducir a"<<endl;
+cin>>a;
+cout<<"Introducir b"<<endl;
+cin>>b;
+cout<<"Introducir c"<<endl;
+cin>>c;
+
+d=b*b-(4*a*c);
+
+if (d==0)
+
+{
+
+x1=-b/(2*a);
+cout<<"Hay una solucion real"<<x1<<endl;
+
+}
+
+else
+
+{
+
+if (d>0)
+
+{
+
+x1=(-b+sqrt(b*b-4*a*c))/(2*a);
+x2=(-b-sqrt(b*b-4*a*c))/(2*a);
+
+cout<<"Hay dos soluciones reales"<<endl;
+cout<<x1<<endl;
+cout<<x2<<endl;
+
+}
+
+else
+
+cout<<"Las soluciones son imaginarias";
+
+}
+
+getch();
+
+}
