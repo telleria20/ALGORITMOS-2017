@@ -1,0 +1,24 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include "math.h"
+
+using namespace std;
+
+void main()
+{
+int cont1,cont2,num,primo;
+cout<<"ingrese el numero para analizar si es primo o no"<<endl;
+cin>>num;
+cont2=0;
+for(cont1=1;cont1<=num;cont1++)
+	if(num%cont1==0)
+	{cont2=cont2+1;
+	}
+if(cont2<=2) 
+	cout<<"el numero "<<num<<" Es primo"<<endl;
+else
+	cout<<"el numero "<<num<<" No es primo"<<endl;
+
+getch();
+}
