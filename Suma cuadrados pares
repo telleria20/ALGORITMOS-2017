@@ -1,0 +1,19 @@
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+#include "math.h"
+using namespace std;
+
+void main()
+{
+ int suma,N;
+ float i;
+ cout<< "ingresarel valor de N:";
+ cin>> N;
+ suma=0;
+  for(i=1;i<=N;i++)
+      suma=suma+pow(N,i);
+  cout<<"la suma de los "<<"primeros numeros cuadrados naturaleses:"<<suma;
+  getch();
+ 
+}
