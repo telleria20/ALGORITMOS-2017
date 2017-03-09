@@ -1,0 +1,91 @@
+#include "stdafx.h"
+#include "conio.h"
+#include <iostream>
+#include "math.h"
+
+using namespace std;
+
+void cubo(float n);
+void PI(int potencia);
+float Potencia(float n, int pot);
+void salarioDesc(float sueldo);
+
+void main()
+{
+	int opcion,potencia=0;
+	float n, sueldo;
+	do {
+		cout<<"------MENU------";
+		cout<<"1.- Calcular el cubo de un numero real:";
+		cout<<"2.- Calcular la enesima potencia de PI:";
+		cout<<"3.- Calcular el salario de un trabajador:";
+		cout<<"0.- Salir";
+		cout<<"Ingrese la opcion que quiera calcular:";
+		cin>>opcion;
+		switch(opcion)
+		{
+		case 1 : cout<<"Ingrese el numero real:";
+			cin>>n;
+			cubo(n);
+			break;
+		case 2 : 
+			PI(potencia);
+			break;
+		case 3 : cout<<"Ingrese el sueldo base del trabajador:";
+			cin>>sueldo;
+			salarioDesc(sueldo);
+			break;
+		} 
+		while(opcion!=0);
+		  
+		getch();
+	}
+}
+	
+    void cubo(float n);
+	{
+		float result;
+		result=pow(n,3);
+		cout<<"El cubo del numero:"<<n<<" es: "<<result;
+	}
+
+	void PI(int potencia)
+	{
+		float res1,res2,PI;
+		PI=3.1416;
+		for(potencia=2;potencia<=10;potencia++)
+		{
+			res1=Potencia(PI, potencia);
+			res2=sqrt(res1);
+			cout<<"PI a la potencia"<<potencia<<" es: "<<res1;
+			cout<<"La raiz cuadrada del anterior resultado es:"<<res2;
+		}
+	}
+
+	float Potencia(float n, int potencia)
+	{
+		int i;
+		float res=1;
+		for(i=0;i<potencia;i++)
+		{
+			res=res*n;
+		}
+		return res;
+	}
+
+	void salarioDesc(float sueldo)
+	{
+		float descuento;
+		if(sueldo<=1000)
+ 		{ descuento=sueldo*0.1;
+		}
+		if(sueldo>1000 && sueldo <=2000)
+		{ descuento=sueldo*0.15;
+		}
+		if(sueldo>2000)
+		{ descuento =sueldo*0.18;
+		}
+		sueldo=sueldo-descuento;
+		cout<<"Descuento del trabajador:"<<descuento;
+		cout<<"Sueldo neto del trabajador:"<<sueldo;
+	}
