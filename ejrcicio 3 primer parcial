@@ -1,0 +1,40 @@
+#include "stdafx.h"
+#include <iostream>
+#include"conio.h"
+#include "math.h"
+
+using namespace std;
+
+float discriminante(float a, float b, float c);
+void main(){
+	float a, b,c,x;
+	cout<<"Ingrese a:";
+	cin>>a;
+	cout<<"Ingrese b;";
+	cin>>b;
+	cout<<"Ingrese c;";
+	cin>>c;
+	x=discriminante(a,b,c);
+	if(x==0)
+		cout<<"Solucion unica:"<<-b/(2*a);
+	else
+		if(x>0){
+		   cout<<"Solucion reales:";
+		   cout<<"x1: "<<(-b+sqrt(x))/(2*a)<<endl;
+		   cout<<"x2: "<<(-b-sqrt(x))/(2*a)<<endl;
+		}
+		else{
+			cout<<"Soluciones imaginarias:";
+			 cout<<"x1: "<<(-b/(2*a))<<"+"<<(sqrt(-x)/(2*a))<<"i"<<endl;
+		     cout<<"x2: "<<(-b/(2*a))<<"-"<<(sqrt(-x)/(2*a))<<"i"<<endl;
+		}
+	 getch();
+
+}
+
+float discriminante(float a, float b, float c){
+	float z;
+	z=pow(b,2)-4*a*c;
+	return z;
+}
+
