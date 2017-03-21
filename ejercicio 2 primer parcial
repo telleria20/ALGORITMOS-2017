@@ -1,0 +1,34 @@
+
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+
+
+using namespace std;
+
+float serie(int x, int n);
+
+void main()
+{
+	int n,x,i,c;
+	float s;
+	do{
+		cout<<"Ingrese el valor de x:";
+	    cin>>x;
+	}while (x<0);
+    do{
+	cout<<"Ingrese el num de termino:";
+	cin>>n;
+	}while (n<0);
+	c=serie(x,n);
+	cout<<"El resultado es:"<<c;
+    getch();
+}
+    float serie(int x, int n){
+		int i;
+		float s=0;
+	    for(i=1;i<n;i++)
+		    s=s+(pow(1+(1.0/i),x));
+		   
+		 return s;
+	}
