@@ -1,0 +1,82 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include <string>
+#define N 100
+
+using namespace std;
+
+void cargarV(int notas[], int n);
+void cargarVS(string alumnos[], int n, int notas[]);
+void burbuja(int notas[], string alumnos[], int n);
+void mostrarV(int notas[], string alumnos[], int n);
+
+void main()
+{
+	//primero pedir el tamaño del vector//
+	int n, notas[N];
+	string alumnos[N];
+	do{
+		cout<<"Ingrese el tamaño del vector:";
+		cin>>n;
+	}while(n<=0 || n>N);
+	cargarVS(alumnos,n,notas);
+	//cargarV(notas,n);
+	burbuja(notas,alumnos,n);
+	mostrarV(notas,alumnos,n);
+	mostrarV(notas,alumnos,3);
+
+	getch();
+}
+
+
+
+
+//void cargarV(int notas[], int n){
+	//	int i;
+			//for(i=0;i<n;i++){
+				//cout<<"Ingrese la nota:";
+              //  cin>>notas[i];
+
+			//}
+//}
+
+void cargarVS(string alumnos[], int n,int notas[]){
+		int i;   
+		cin.ignore();
+		for(i=0;i<n;i++){
+	
+				cout<<"alumnos["<<i<<"]:";
+				getline(cin, alumnos[i]);
+				cout<<"Ingrese la nota["<<i<<"]";
+                cin>>notas[i];
+				cin.ignore();
+		}
+	}
+
+
+void burbuja(int notas[], string alumnos[], int n){
+		int i,j,notasaux;
+		string alumnosaux;// descendente de mayor a menor//
+		for(i=0;i<n-1;i++)
+			for(j=i+1;j<n;j++)
+				if(notas[i]<notas[j])
+				{
+					notasaux=notas[j];
+		            notas[j]=notas[i];
+					notas[i]=notasaux;
+
+					alumnosaux=alumnos[j];
+					alumnos[j]=alumnos[i];
+					alumnos[i]=alumnosaux;
+				}
+	}
+
+	
+void mostrarV(int notas[], string alumnos[], int n){
+		int i;
+		cout<<"Alumnos"<<"\t"<<"Notas"<<endl;
+		for(i=0;i<n;i++)
+		cout<<alumnos[i]<<"\t"<<notas[i]<<endl;//tabulador//
+	}
+
