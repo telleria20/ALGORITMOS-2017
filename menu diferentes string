@@ -1,0 +1,232 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include <string>
+
+using namespace std;
+void longitud(string nombre);
+void comparar(string nombre);
+void numerovocales(string nombre);
+void sacarstring(string nombre);
+void intercambiar(string nombre);
+void encontrarstring(string nombre);
+void palindromo(string nombre);
+void quitarvoc(string nombre);
+void declarastring(string nombre);
+
+	void main(){
+		int longitud,cont,pos;
+	    char aux;
+		string var1, var2, nombre;
+		int opcion;
+	do {
+     cout << endl;
+     cout << "1.- Uso de lenght para determinar cadena de caracteres:" << endl;
+     cout << "2.- uso de compare" << endl;
+     cout << "3.- Numero de vocales en el nombre" << endl;
+     cout << "4.- Sacar una parte del string" << endl;
+	 cout << "5.- Intercambia string" << endl;
+	 cout << "6.- Encuentra caracteres en string" << endl;
+	 cout << "7.- Invertir una frase  " << endl;
+	 cout << "8.- Quitar vocales " << endl;
+	  cout <<"9.- Declarar strings" << endl;
+	 cout << "0.- Salir" << endl;
+     cout << "Elige una opción: " ;
+	 cin>>opcion;
+	 switch (opcion) {
+	 case 1: longitud(nombre);
+		 break;
+	 case 2:  comparar(nombre);
+		 break;
+	 case 3: numerovocales(nombre);
+		 break;
+	 case 4:  sacarstring(nombre);
+		 break;
+	 case 5:  intercambiar(nombre);
+		 break;
+	 case 6:  encontrarstring(nombre);
+		 break;
+	 case 7:  palindromo(nombre);
+		 break;
+	 case 8:  quitarvoc(nombre);
+		 break;
+	 case 9:  declarastring(nombre);
+		 break;
+	 case 0: cout << "Salir";
+			 break;
+	    default: cout << "Opcion invalida" << endl;
+
+     }getch();
+	 system ("cls");
+	 } while (opcion != 0);
+     getch();
+}
+
+ void longitud(string nombre){
+	 int longitud;
+	cout<<endl<<"Ejemplo de uso de length para determinar la longitud de un string";
+	longitud=nombre.length();
+	cout <<endl<<"El string tiene: "<<longitud;
+ }
+
+ void comparar(string nombre){
+	 string var2;
+	 cout<<endl<<"Ejemplo de uso de compare para determinar si dos cadenas son iguales";
+	 cout<<endl<<"Redigite el nombre: ";
+	 getline(cin,var2);
+
+	if (nombre.compare(var2) == 0 )
+		cout<<endl<<"Los datos coinciden"<<endl;
+	else 
+		cout << nombre << " es diferente que "<<var2 << " :1"<<endl;
+ }
+
+ void numerovocales(string nombre){
+
+	 int longitud,cont=0;
+	cout<<endl<<"Ejemplo de uso de elementos individuales: "<<endl;
+	cout<<endl<<"Contar vocales"<<endl<<endl;
+	for (int i=0;i<longitud;i++)
+		if (nombre[i]=='a' || nombre[i]=='e'||nombre[i]=='i'||nombre[i]=='o'||nombre[i]=='u')
+			cont++;
+
+	cout<<"Numero de vocales: "<<cont<<endl;
+	
+	cout<<endl<<"Ejemplo de uso de elementos individuales con at: "<<endl;
+	cont=0;
+	for (int i=0;i<longitud;i++)
+		if (nombre.at(i)=='a' || nombre.at(i)=='e'||nombre.at(i)=='i'||nombre.at(i)=='o'||nombre.at(i)=='u')
+			cont++;
+	cout<<"Numero de vocales: "<<cont<<endl;
+ }
+
+ void sacarstring(string nombre){
+	 int pos, longitud;
+	 string var2;
+	 cout<<endl<<"Ejemplo de uso de substr"<<endl;
+	 cout<<endl<<"Ingrese desde donde desea extraer el sbstring: ";
+	 cin>>pos;
+	 cout <<nombre.substr(pos,longitud-pos);
+	 cin.ignore();
+ }
+
+ void intercambiar(string nombre){
+	 string var2;
+	 cout<<endl <<"Intercambia variables";
+	nombre.swap(var2);
+	cout << nombre;
+	cout << var2;
+ }
+
+ void encontrarstring(string nombre){
+	 string var2;
+	 int longitud;
+	 cout << var2.find(' ');
+	longitud=var2.length();
+	for (int i=0;i<longitud;i++)
+		if (var2.at(i)==' ' )
+			cout << endl<<"Existe un espacio en: "<<i;
+ }
+
+ void palindromo(string nombre){
+	 int longitud, aux;
+	 string var2;
+     getline(cin,nombre);
+	var2=nombre;
+	longitud=nombre.length();
+	for (int i=0;i<longitud/2;i++)
+	{
+		aux=nombre[i];
+	    nombre[i]=nombre[longitud-1-i];
+		nombre[longitud-1-i]=aux;
+	}
+	cout <<"La cadena invertida es: "<< nombre<<endl;
+	
+	if (var2.compare(nombre)==0)
+		cout<<"Es un palindromo";
+ }
+
+//Declarar strings
+	/*
+	cout<<endl<<"Ejemplo de uso de getline para ingresar cadena de caracteres";
+	cout<<endl<<"Ingrese un nombre: ";
+	getline(cin,nombre);
+	cout<<endl<<"Ejemplo de uso de length para determinar la longitud de un string";
+	longitud=nombre.length();
+	cout <<endl<<"El string tiene: "<<longitud;
+
+	cout<<endl<<"Ejemplo de uso de compare para determinar si dos cadenas son iguales";
+	cout<<endl<<"Redigite el nombre: ";
+	getline(cin,var2);
+
+	if (nombre.compare(var2) == 0 )
+		cout<<endl<<"Los datos coinciden"<<endl;
+	else 
+		cout << nombre << " es diferente que "<<var2 << " :1"<<endl;
+	
+	// Numero de vocales en el nombre
+	
+	cont=0;
+	cout<<endl<<"Ejemplo de uso de elementos individuales: "<<endl;
+	cout<<endl<<"Contar vocales"<<endl<<endl;
+	for (int i=0;i<longitud;i++)
+		if (nombre[i]=='a' || nombre[i]=='e'||nombre[i]=='i'||nombre[i]=='o'||nombre[i]=='u')
+			cont++;
+
+	cout<<"Numero de vocales: "<<cont<<endl;
+	
+	cout<<endl<<"Ejemplo de uso de elementos individuales con at: "<<endl;
+	cont=0;
+	for (int i=0;i<longitud;i++)
+		if (nombre.at(i)=='a' || nombre.at(i)=='e'||nombre.at(i)=='i'||nombre.at(i)=='o'||nombre.at(i)=='u')
+			cont++;
+	cout<<"Numero de vocales: "<<cont<<endl;
+	
+	// Sacar una parte del string
+	cout<<endl<<"Ejemplo de uso de substr"<<endl;
+	cout<<endl<<"Ingrese desde donde desea extraer el sbstring: ";
+	cin>>pos;
+	cout <<nombre.substr(pos,longitud-pos);
+	cin.ignore();
+	// Intercambia string
+	cout<<endl <<"Intercambia variables";
+	nombre.swap(var2);
+	cout << nombre;
+	cout << var2;
+	
+	//Encuentra caracteres en string
+	cout << var2.find(' ');
+	longitud=var2.length();
+	for (int i=0;i<longitud;i++)
+		if (var2.at(i)==' ' )
+			cout << endl<<"Existe un espacio en: "<<i;
+	
+	// Invertir una frase 
+*/
+	
+
+void quitarvoc(string nombre){
+	string var2;
+	int longitud, cont;
+	var2=nombre;
+	cont=0;
+	longitud=nombre.length();
+	for (int i=0;i<longitud;i++)
+		if (nombre[i]!='a' && nombre[i]!='e'&& nombre[i]!='i'&& nombre[i]!='o'&& nombre[i]!='u')
+		{
+			var2[cont]=nombre[i];
+			cont++;
+		}
+	cout<<"Sin vocales es: "<<var2;
+	getch();
+}
+
+void declarastring(string nombre){
+	int longitud;
+	cout<<endl<<"Ejemplo de uso de getline para ingresar cadena de caracteres";
+	cout<<endl<<"Ingrese un nombre: ";
+	getline(cin,nombre);
+	cout<<endl<<"Ejemplo de uso de length para determinar la longitud de un string";
+	longitud=nombre.length();
+	cout <<endl<<"El string tiene: "<<longitud;
+}
