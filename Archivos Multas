@@ -1,0 +1,143 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include "stdio.h "
+#include <string>
+using namespace std;
+struct Multas
+{
+int Id_Mult;
+string Matricula_v;
+int CI;
+string Fecha;
+string Estado;
+};
+struct Multas_Mes
+{
+int ID_Mult;
+string Matricula_v;
+int CI;
+string Fecha;
+string Estado;
+};
+void cargar_Multas();
+void Insertar_en_Mult_mes(Multas x);
+void Ordenar(int pos, Multas x);
+void cargar_Multas()
+{
+FILE*ptr;
+Multas mult;
+long int dir_fisica;
+int no_id;
+ptr=fopen("Multas.dat", "r+b");
+if(ptr=NULL)
+{
+cout<<"Ingrese el ID de la multa:";
+cin>>no_id;
+dir_fisica=no_id*sizeof(mult);
+cout<<endl<<"Ingrese la matricula 
+del vehiculo:";
+cin.ignore();
+getline(cin, mult.Matricula_v);
+cout<<endl<<"Ingrese el C.I. 
+de la persona:";
+cin>>mult.CI;
+cout<<endl<<"Ingrese la fecha de 
+la denuncia en formato aaaammdd:";
+cin.ignore();
+getline(cin, mult.Fecha);
+mult.Estado="A";
+mult.Id_Mult=no_id;
+fseek(ptr, dir_fisica, SEEK_SET);
+fwrite(&mult, sizeof(mult), 1, ptr);
+Insertar_en_Mult_mes(mult);
+}
+else
+{
+cout<<"El archivo no pudo abrirse:";
+}
+fclose(ptr);
+}
+void Insertar_en_Mult_mes(Multas x)
+{
+FILE*ptr;
+Multas_Mes mult_mes;
+int d,m,a,d1,m1,a1,i=0;
+ptr=fopen("Multas_Mes.dat", "rb");
+if(ptr=NULL)
+{
+fread(&mult_mes,sizeof(mult_mes),1,ptr);
+while (!feof(ptr))
+{
+if(mult_mes.Estado=="A")
+{
+Obtener_Fecha(mult_mes.Fecha,d,m,a);
+Obtener_Fecha(x.Fecha,d1,m1,a1);
+if(m1>m){
+fread(&mult_mes, sizeof(mult_mes),1,ptr);
+i++;
+}
+else
+{
+if((d1>=d)&&(m1==m)){
+i++;
+fclose(ptr);
+Ordenar(i,x);
+}
+else
+{
+fclose(ptr);
+Ordenar(i,x);
+}
+}
+}
+}
+void Ordenar(int pos, Multas x)
+{
+FILE*ptr;
+long int dir_fisica;
+Mulstas_Mes mult_mes, aux;
+ptr=fopen("Multas_Mes.dat", "r+b");
+if(ptr!=NULL)
+{
+dir_fisica=pos*sizeof(mult_mes);
+fseek(ptr,dir_fisica,SEEK_SET);
+fread(&mult_mes,sizeof(mult_mes),1,ptr);
+while(!feof(ptr))
+{
+if(mult_mes.Estado=="A")
+{
+aux=mult_mes;
+mult_mes=x;
+fwrite(&mult_mes,sizeof(mult_mes),1,ptr);
+x=aux;
+}
+fread(&mult_mes,sizeof(mult_mes),1,ptr);
+}
+fclose(ptr);
+}
+}
+
+void eliminar_pagados()
+{
+FILE *ptr;
+multas reg;
+ptr=fopen("multas.dat","rb");
+if(ptr!=NULL)
+{
+fread(&reg,sizeof(reg),1,ptr);
+while (!feof(ptr))
+{
+if((reg.estado=="N")&&(reg.pagado!=""))
+{
+reg.estado="S";
+
+fseek(ptr,sizeof(reg)*(reg.id-1),SEEK_SET);
+
+fwrite(&reg,sizeof(reg),1,ptr);
+}
+fread(&reg,sizeof(reg),1,ptr);
+}
+}
+fclose(ptr);
+}
