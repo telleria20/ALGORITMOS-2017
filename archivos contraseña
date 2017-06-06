@@ -1,0 +1,63 @@
+#include "stdafx.h"
+#include <iostream>
+#include "conio.h"
+#include "stdio.h "
+#include <string>
+
+using namespace std;
+struct Datos_Usuario {
+string usuario;
+string contrasenha;
+string palabra_secreta;
+};
+int main()
+{
+Datos_Usuario a;
+string  aux;
+int i = 3;
+while (i>0)
+{
+cout << "Usuario: ";
+fflush(stdin);
+getline(cin, a.usuario);
+cout << endl << "Contracena: ";
+aux[0] = _getch();
+while (aux[0] != 13)
+{
+a.contrasenha.push_back(aux[0]);
+cout << "*";
+aux[0] = _getch();
+}
+if((a.usuario=="angel")&&
+(a.contrasenha=="wayar"))
+/*((Verificar_Usuario(a.
+usuario))&&(lo otro)))*/
+{
+cout << endl << "ha Ingresado";
+i = 0;
+}
+else
+{
+system("cls");
+i--;
+if ((i==0)&&(a.usuario=="angel"))
+{
+cout << endl << "Ingrese la 
+Palabra Secreta: ";
+fflush(stdin);
+getline(cin, a.palabra_secreta);
+if (a.palabra_secreta=="Wachin gay")
+/*(Verificar_Palabra_Secreta
+(a.palabra_secreta))*/
+{
+cout  << endl << "Ha ingresado";
+i = 0;
+}
+}
+}
+}
+_getch();
+return 0;
+}
+ 
+ 
