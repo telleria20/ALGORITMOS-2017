@@ -1,0 +1,2057 @@
+#include "stdafx.h"
+#include <iostream> // Para el manejo de cout
+#include <stdio.h> // Para el manejo de archivos
+#include <string> // Para el manejo de cadenas
+#include <conio.h> // Para el manejo de clrscr
+#include <stdlib.h>
+#include <ctype.h>// Para el uso de toupper
+
+using namespace std;
+
+struct tipo_registro
+{                      // Campos:
+	int no_prod;         // Numero de producto
+	string descrip;    // Descripcion del articulo
+	int cantidad;        // Cantidad disponible en almacen
+	float precio;        // Precio del articulo
+	char garantia;       // Tiene garantia? [S/N]
+	int estado;
+};
+//Estructuras  
+struct Cliente
+{
+	string Nombre;
+	string Apellido;
+	string Direccion_Domicilio;
+	string Num_Telf;
+	int Id_Cliente;
+	string Estado;
+};
+struct Animal
+{
+	string Nombre_Animal;
+	int Edad;
+	string Raza;
+	string Descripcion;
+	int Id_Cliente;
+	int Id_Animal;
+	string Estado;
+};
+struct Servicios
+{
+	string Serv;
+	int Id_Animal;
+	string Fecha;
+	float Costo;
+	int Id_Servicio;
+	string Estado;
+};
+Cliente clien; // Declaracion global de la variable
+						// "Registro" de tipo struct tipo_registro
+Animal masc;
+Servicios serv;
+FILE *reg;  // Declaracion global de la variable "reg" (apuntador a un
+			  // archivo
+FILE *reg1;
+long int dir_fisica;  // Declaracion global de la variable para calcular
+					  // la direccion fisica
+
+
+
+
+
+
+
+//----------------------------------------------------------------------
+//Delucion de las posicion del puntero global
+int Devolucion_Pos_Puntero();
+
+//Verificaciones Globales
+bool Verificar_Numero(string x);
+bool Verificar_Nombre_Cliente(string x);
+bool Verificar_Apellido_Cliente(string x);
+bool Verificar_Numero_Telefono(string x);
+
+//Verificaciones de la Animal Global
+bool Verificar_Nombre_Animal(string x);
+bool Verificar_Edad_Animal(string x);
+
+//Verificacion de fecha
+bool Verificar_Sintaxys_Fecha(string &x);
+bool Verificar_Fecha(string x);
+
+//Funciones para crear Archivo Globales
+void Crear_Archivo_Cliente();
+void Crear_Archivo_Animal();
+void Crear_Archivo_Servicio();
+
+//Verificaciones para Eliminar Cliente Global
+bool Verificar_Cliente_Animal(int x);
+bool Existe_Id_Cliente(int x);
+
+//Funciones para Eliminar Globales
+void Eliminar_Cliente();
+
+//Menu Medico
+void Menu_Medico(int id_masc,string x);
+
+//SubMenu de Estetica Banho global
+void Menu_Banho(int id_masc,string x);
+
+//SubMenu De Estetica Corte
+void Menu_Corte(int id_masc, string x);
+
+//Menu Estetica global
+void Menu_Estetica(int id_masc, string x);
+
+//Menu de Alimentos Global
+void Menu_Alimento(int id_masc,string x);
+
+//Menu De Vacunas Global
+void Menu_Vacunas(int id_masc,string x);
+
+//Menu de otros Servicios Global
+void Menu_Otros_Servicios(int id_masc, string x);
+
+//Menu de Servicios Global
+void Menu_Tipo_De_Atencion(int id_Animal, string Fecha);
+
+//Menu para crear Archivos Global
+void Menu_CrearArchivo();
+
+//Menu de Reportes Global
+void Menu_Reportes();
+
+//Menu principal para eliminar global
+void Menu_Eliminar();
+
+//Datos para la Animales Global
+void Datos_Animales(int Cant, int idCliente);
+
+//Listado de Animales  Cliente 
+void Litado_Animal_Cliente(int x);
+
+//Realizar Servicios para el cliente Global
+void Realizar_Servicio(void); 
+
+//void CONSULTA_DIRECTA(void); // Declaracion global de la rutina de Consultas
+//void MODIFICACION_DIRECTA(void); // Declaracion global de la rutina de Modificaciones
+//void BAJA_LOGICA_DIRECTA(void); // Declaracion global de la rutina de Baja Logica
+
+//Reporte secuencial de idanimales
+void Lista_Secuencial_idAnimales(void);
+
+//Reporte secuencial de la Animal
+void Lista_Secuencial_Animal(void);
+//Reporte secuencial del cliente
+void Lista_Secuencial_Cliente(void); 
+//Listado Secuencial de Servicios
+void Lista_Secuencial_Servicios(void);
+
+
+void main(void)
+{
+	int op;
+	string auxop;
+	do
+	{
+		do {
+			cout << endl;
+			cout << "////////////MENU\\\\\\\\\\\\\\\\"<<endl;
+			cout << endl<<" 1.- Crear Archivos";
+			cout <<endl<< " 2.- Reportes";
+			cout << endl << " 3.- Eliminar";
+			cout << endl << " 4.- Realizar Servicios";
+			cout << endl << " 0.- Salir";
+
+			cout << "\n\n\n\r Digite su opcion: ";
+			getline(cin,auxop);
+		} while (!Verificar_Numero(auxop));
+		op = stoi(auxop,nullptr,0);
+		switch (op)
+		{
+		case 1: 
+			system("cls");//La funcion system("cls") --> limpia la pantalla.
+			Menu_CrearArchivo();//Muestra un menu de los archivos que se pueden crear
+			//ALTA_DIRECTA();         
+			break;
+		case 2:// CONSULTA_DIRECTA(); 
+			system("cls");
+			Menu_Reportes();
+			break;
+		case 3:
+			Menu_Eliminar();
+			//MODIFICACION_DIRECTA();
+			break;
+		case 4:
+			Realizar_Servicio();
+			//BAJA_LOGICA_DIRECTA(); 
+			break;
+		case 0:
+			cout << "\t saliendo del programa";
+			break;
+		default:
+			cout << "\t opcion invalida";
+			break;
+		}
+	} while (op != 0);
+}
+
+//Verificaciones Cliente
+bool Verificar_Numero(string x)
+{
+	bool k = false;
+	int i = 0;
+	while (i<x.length())
+	{
+		if (isdigit(x[i]))
+		{
+			k = true;
+		}
+		else
+		{
+			k = false;
+			i = x.length();
+		}
+		i++;
+	}
+	return k;
+}
+bool Verificar_Nombre_Cliente(string x)
+{
+	bool k = false;
+	int i = 0;
+	while (i<x.length())
+	{
+
+		if (isalpha(x[i]))
+		{
+			k = true;
+		}
+		else
+		{
+			i = x.length();
+			k = false;
+
+		}
+		i++;
+	}
+	return k;
+}
+bool Verificar_Apellido_Cliente(string x)
+{
+	bool k = false;
+	int i = 0;
+	while (i<x.length())
+	{
+
+		if (isalpha(x[i]))
+		{
+			k = true;
+		}
+		else
+		{
+			i = x.length();
+			k = false;
+
+		}
+		i++;
+	}
+	return k;
+}
+bool Verificar_Numero_Telefono(string x)
+{
+	bool k = false;
+	int i = 0, t = x.length();
+	while (i<t)
+	{
+
+		if (t<7)
+		{
+
+			return k;
+		}
+		else
+		{
+			if (t>8)
+			{
+				return k;
+			}
+			else
+			{
+				if (isdigit(x[i]))
+				{
+					k = true;
+				}
+				else
+				{
+					i = x.length();
+					k = false;
+
+				}
+			}
+		}
+		i++;
+	}
+	return k;
+}
+
+//Verificaciones de la Animal
+bool Verificar_Nombre_Animal(string x)
+{
+	bool k = false;
+	int i = 0;
+	while (i<x.length())
+	{
+
+		if (isalpha(x[i]))
+		{
+			k = true;
+		}
+		else
+		{
+			i = x.length();
+			k = false;
+
+		}
+		i++;
+	}
+	return k;
+}
+bool Verificar_Edad_Animal(string x)
+{
+	int i = 0, aux;
+	bool k = true;
+	while (i<x.length())
+	{
+		if (!isdigit(x[i]))
+		{
+			return false;
+		}
+		i++;
+	}
+	aux = stoi(x, nullptr, 0);
+	if (aux < 1)
+	{
+		return false;
+	}
+	return k;
+}
+//Verificar Fecha
+//Verificar Fecha
+bool Verificar_Sintaxys_Fecha(string &x)
+{
+	bool k = true;
+	int i = 0, aux = 0;
+	string dia, mes, anho;
+	do
+	{
+		if (isdigit(x[i]))
+		{
+			dia += x[i];
+		}
+		i++;
+	} while (x[i] != '/');
+	aux = stoi(dia, nullptr, 0);
+	if ((aux<10) && (x[0] != '0'))
+	{
+		return false;
+	}
+	do
+	{
+		if (isdigit(x[i]))
+		{
+			mes += x[i];
+		}
+		i++;
+	} while (x[i] != '/');
+	aux = stoi(mes, nullptr, 0);
+	if ((aux<10) && (x[3] != '0'))
+	{
+		return false;
+	}
+	return k;
+}
+bool Verificar_Fecha(string x)
+{
+	bool k = false;
+	string dia, mes, anho;
+	int Dia, Mes, Anho;
+	int i = 0, aux = 0;
+	x[x.length()] += '/';
+	do
+	{
+		if (isdigit(x[i]))
+		{
+			dia += x[i];
+		}
+		i++;
+	} while (x[i] != '/');
+
+	do
+	{
+		if (isdigit(x[i]))
+		{
+			mes += x[i];
+		}
+		i++;
+	} while (x[i] != '/');
+
+	do
+	{
+		if (isdigit(x[i]))
+		{
+			anho += x[i];
+		}
+		i++;
+	} while (x[i] != '/');
+	Mes = stoi(mes, nullptr, 0);
+	if (0<Mes<13)
+	{
+		Dia = stoi(dia, nullptr, 0);
+		if ((1 == Mes) || (3 == Mes) || (5 == Mes) || (7 == Mes) || (8 == Mes) || (10 == Mes) || (12 == Mes))
+		{
+			if (0<Dia<32)
+			{
+				k = true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		if (Mes == 2)
+		{
+			if (0<Dia<30)
+			{
+				k = true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		if ((4 == Mes) || (6 == Mes) || (9 == Mes) || (11 == Mes))
+		{
+			if (0<Dia<31)
+			{
+				k = true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		Anho = stoi(anho, nullptr, 0);
+		if (Anho >= 2016)
+		{
+			k = true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+	if (Verificar_Sintaxys_Fecha(x) == false)
+	{
+		return false;
+	}
+	return k;
+}
+//Devolucion Posicion del Puntero
+int Devolucion_Pos_Puntero()
+{
+	int i = 1;
+	Servicios aux;
+	reg1 = fopen("Servicio.DIR","rb");
+	fread(&aux,sizeof(aux),1,reg1);
+	while (!feof(reg1))
+	{
+		i++;
+		fread(&aux, sizeof(aux), 1, reg1);
+	}
+	fclose(reg1);
+	return i;
+}
+//Funciones para crear Archivos
+void Crear_Archivo_Cliente()//Funcion que crea el Archivo Cliente.dat
+{
+	FILE *ptr;
+	ptr = fopen("Cliente.DIR", "wb");
+	if (ptr != NULL)
+	{
+		cout << "El Archivo ha sido creado Exitosamente.!" << endl;
+	}
+	else
+	{
+		cout << "Error, El Archivo no pudo Crearce" << endl;
+	}
+	fclose(ptr);
+}
+void Crear_Archivo_Animal()//Funcion que crea el Archivo Animal.dat
+{
+	FILE *ptr;
+	ptr = fopen("Animal.DIR", "wb");
+	if (ptr != NULL)
+	{
+		cout << "El Archivo ha sido creado Exitosamente.!" << endl;
+	}
+	else
+	{
+		cout << "Error, El Archivo no pudo Crearce" << endl;
+	}
+	fclose(ptr);
+}
+void Crear_Archivo_Servicio()//Funcion que crea el Archivo Servicio.dat
+{
+	FILE *ptr;
+	ptr = fopen("Servicio.DIR", "wb");
+	if (ptr != NULL)
+	{
+		cout << "El Archivo ha sido creado Exitosamente.!" << endl;
+	}
+	else
+	{
+		cout << "Error, El Archivo no pudo Crearce" << endl;
+	}
+	fclose(ptr);
+}
+
+//Verificacion de Cliente Animal
+bool Verificar_Cliente_Animal(int x)
+{
+	bool k = false;
+	reg = fopen("Animal.DIR", "rb");
+	if (reg!=NULL)
+	{
+		fread(&masc, sizeof(masc), 1, reg);
+		// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+		while (!feof(reg)) // Ciclo mientras no se encuentre el final del archivo
+		{
+			if ((masc.Estado == "A") && (masc.Estado != "") && (masc.Id_Cliente == x))
+			{
+				fread(&masc, sizeof(masc), 1, reg);
+				k = true;
+			}
+		}
+	}
+	else
+	{
+		cout << endl << "El archivo no pudo abrirse Correctamente";
+	}
+	fclose(reg);
+	return k;
+}
+
+//Verificaciones para Eliminar Cliente Global
+bool Existe_Id_Cliente(int x)
+{
+	reg = fopen("Cliente.DIR", "rb"); // Intenta abrir el archivo PRODUCTO.DIR
+									  // en modo de solo lectura
+	if (reg == NULL)
+	{
+		cout << "\n\n\n\rNo existe el archivo !!!";
+		cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+	}
+	dir_fisica = x*sizeof(clien);
+	fseek(reg, dir_fisica, SEEK_SET);
+	fread(&clien, sizeof(clien), 1, reg);
+	if ((clien.Estado == "A") && (clien.Estado != "") && (clien.Id_Cliente == x))
+	{
+		fclose(reg); // Cierra el archivo
+		return true;
+	}
+	else
+	{
+		cout << endl << "El Cliente no Existe ";
+		fclose(reg); // Cierra el archivo
+		return false;
+	}
+}
+
+//Funciones para Eliminar
+void Eliminar_Cliente()
+{
+	int no_id;
+	string aux;
+	cout << "Ingrese el Id del Cliente que desea Eliminar: ";
+	do
+	{
+		getline(cin, aux);
+	} while (!Verificar_Numero(aux));
+	no_id = stoi(aux, nullptr, 0);
+	if (Existe_Id_Cliente(no_id))
+	{
+		if (!Verificar_Cliente_Animal(no_id))
+		{
+			cout << endl << "Esta seguro que desea Eliminar al Cliente";
+			cout << endl << "Digite Y/N: ";
+			do {
+				getline(cin, aux);
+			} while ((aux != "Y") && (aux != "N"));
+			reg = fopen("Cliente.DIR", "rb+");
+			dir_fisica = no_id * sizeof(clien);
+			fseek(reg,sizeof(clien),SEEK_SET);
+			fread(&clien, sizeof(clien), 1, reg);
+			clien.Estado = "I";
+			fseek(reg, sizeof(clien), SEEK_SET);
+			fwrite(&clien, sizeof(clien), 1, reg);
+			fclose(reg);
+		}
+		else
+		{
+			cout << endl << "El Cliente no se puede Eliminar por que tiene Animales Registradas";
+		}
+	}
+	else
+	{
+		cout << endl<<"El Id de Cliente no existe";
+	}
+}
+
+//Menu Para Crear Archivos
+void Menu_CrearArchivo()
+{
+	int op;
+	string auxop;
+	do
+	{
+		do
+		{
+			system("cls");
+			cout << "//////////MENU PARA CREAR ARCHIVOS//////////" << endl;
+			cout << "1.-Crear Archivo de Cliente" << endl;
+			cout << "2.-Crear Archivo de Animales" << endl;
+			cout << "3.-Crear Archivo de Atencion medica" << endl;
+			cout << endl << " 0.- Salir";
+			cout << endl << "Digite su Opcion: ";
+			getline(cin, auxop);
+		} while (Verificar_Numero(auxop) == false);
+		op = stoi(auxop, nullptr, 0);
+		switch (op)
+		{
+		case 1:
+			system("cls");
+			Crear_Archivo_Cliente();//Crea el archivo Cliente.dat
+			break;
+		case 2:
+			system("cls");
+			Crear_Archivo_Animal();//Crea el archivo Animal.dat
+			break;
+		case 3:
+			system("cls");
+			Crear_Archivo_Servicio();//Crea el Archivo Servicio.dat
+			break;
+		}
+	} while (op != 0);
+	system("cls");
+}
+
+//Menu Reportes
+void Menu_Reportes()
+{
+	int op;
+	string auxop;
+	do
+	{
+		do {
+			cout << endl;
+			cout << "/////////MENU REPORTES/////////" << endl;
+			cout << endl;
+			cout << "1.-Reporte Detallado" << endl;
+			cout << "2.-Reporte de Clientes" << endl;
+			cout << "3.-Reporte de Animales" << endl;
+			cout << "4.-Reporte de Asistencia medica" << endl;
+			cout << " 0.- Salir";
+			cout << endl << "Digite su opcion: ";
+			getline(cin, auxop);
+		} while (Verificar_Numero(auxop) == false);
+		op = stoi(auxop, nullptr, 0);
+		switch (op)
+		{
+		case 1:
+			system("cls");
+		//	Reporte_Detallado();
+			break;
+		case 2:
+			system("cls");
+			Lista_Secuencial_Cliente();
+			break;
+		case 3:
+			system("cls");
+			Lista_Secuencial_Animal();
+			break;
+		case 4:
+			system("cls");
+			Lista_Secuencial_Servicios();
+			break;
+		}
+		system("cls");
+	} while (op != 0);
+
+}
+
+//Menu Eliminar
+void Menu_Eliminar()
+{
+	int op;
+	string auxop;
+	do
+	{
+		do {
+			cout << endl;
+			cout << "////////////MENU Eliminar\\\\\\\\\\\\\\\\" << endl;
+			cout << endl << " 1.- Eliminar Cliente";
+			cout << endl << " 2.- Eliminar Animales";
+			cout << endl << " 0.- Salir";
+
+			cout << "\n\n\n\r Digite su opcion: ";
+			getline(cin, auxop);
+		} while (!Verificar_Numero(auxop));
+		op = stoi(auxop, nullptr, 0);
+		switch (op)
+		{
+		case 1:
+			system("cls");//La funcion system("cls") --> limpia la pantalla.
+			Eliminar_Cliente();
+			break;
+		case 2:// CONSULTA_DIRECTA(); 
+			system("cls");
+			break;
+		case 0:
+			cout << "\t saliendo del programa";
+			break;
+		default:
+			cout << "\t opcion invalida";
+			break;
+		}
+	} while (op != 0);
+}
+//Menu Medico
+void Menu_Medico(int id_masc,string x)
+{
+	int op,no_id;
+	string auxop,aux;
+	reg = fopen("Servicio.DIR", "rb+");
+	if (reg!=NULL)
+	{
+		do
+		{
+			do {
+				system("cls");
+				cout << "Menu Medico" << endl;
+				cout << "Servicios      Costo" << endl;
+				cout << "1.-Analisis de Sangre    60" << endl;
+				cout << "2.-Desparasitacion    50" << endl;
+				cout << "3.-Curacion de heridas    30" << endl;
+				cout << "4.-Fracturas    120" << endl;
+				cout << "5.-Cirugias   350" << endl;
+				cout << "6.-Tratamiento para enfermedades    200" << endl;
+				cout << endl << "Digite su opcion:";
+				getline(cin, auxop);
+			} while (Verificar_Numero(auxop) == false);
+			op = stoi(auxop, nullptr, 0);
+			switch (op)
+			{
+			case 1:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv); 
+					fseek(reg, dir_fisica, SEEK_SET); 
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio== no_id);
+				serv.Costo = 60;
+				serv.Serv = "Analisis de Sangre";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 2:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Costo = 50;
+				serv.Serv = "Desparasitacion";
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 3:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Costo = 30;
+				serv.Serv = "Curacion de Heridas";
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 4:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Costo = 120;
+				serv.Serv = "Fracturas";
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 5:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Costo = 350;
+				serv.Serv = "Cirugias";
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 6:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Costo = 200;
+				serv.Serv = "Tratamiento para Enfermedades";
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			}
+			system("cls");
+		} while (op != 0);
+	}
+	else
+	{
+		
+	}
+	fclose(reg);
+}
+
+//SubMenu de Estetica Banho
+void Menu_Banho(int id_masc,string x)
+{
+	int  op,no_id;
+	string auxop,aux;
+	reg = fopen("Servicio.DIR", "rb+");
+	if (reg != NULL)
+	{
+		do
+		{
+			do
+			{
+				system("cls");
+				cout << "Que tipo de Banho Desea?" << endl;
+				cout << "Costo del servicio:" << endl;
+				cout << "1.-Normal    50" << endl;
+				cout << "2.-Aromatizante     70" << endl;
+				cout << "3.-Acondicionante    80" << endl;
+				cout << "4.-Desparasitante    70" << endl;
+				cout << endl << "Digite su opcion:";
+				getline(cin, auxop);
+			} while (Verificar_Numero(auxop) == false);
+			op = stoi(auxop, nullptr, 0);
+			switch (op)
+			{
+			case 1:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 50;
+				serv.Serv = "Normal";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 2:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Aromatizante";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 3:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 80;
+				serv.Serv = "Acondicionante";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 4:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Desparasitante";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			}
+			system("cls");
+		} while (op != 0);
+	}
+	else
+	{
+
+	}
+	fclose(reg);
+}
+
+
+
+//Menu Estetica
+void Menu_Estetica(int id_masc,string x)
+{
+	int op;
+	string auxop;
+		do
+		{
+			do
+			{
+				system("cls");
+				cout << "Menu Estetica" << endl;
+				cout << "1.-Tipo de Banho" << endl;
+				cout << endl << "Digite su opcion:";
+				getline(cin, auxop);
+			} while (Verificar_Numero(auxop) == false);
+			op = stoi(auxop, nullptr, 0);
+			switch (op)
+			{
+			case 1:
+				Menu_Banho(id_masc,x);
+				break;
+			}
+			system("cls");
+		} while (op != 0);
+}
+
+//Menu Alimento
+void Menu_Alimento(int id_masc,string x)
+{
+	int op,no_id;
+	string auxop,aux;
+	reg = fopen("Servicio.DIR", "rb+");
+	if (reg!=NULL)
+	{
+		do
+		{
+			do
+			{
+				system("cls");
+				cout << "Que Animal Tiene?" << endl;
+			/*	cout << "1.-Perro" << endl;
+				cout << "2.-Gato" << endl;
+				cout << "3.-Pez" << endl;
+				cout << "4.-Roedor" << endl;
+				cout << "5.-Otros" << endl;
+				*/
+				Lista_Secuencial_idAnimales();
+
+				cout << endl << "Digite su opcion:";
+				getline(cin, auxop);
+			} while (Verificar_Numero(auxop) == false);
+			op = stoi(auxop, nullptr, 0);
+			switch (op)
+			{
+			case 1:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Caniche";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 2:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Caniche";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 3:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Caniche";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 4:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Caniche";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 5:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Caniche";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			}
+		} while (op != 0);
+	}
+	else {
+	
+	}
+	fclose(reg);
+}
+
+//Menu de Vacunaciones
+void Menu_Vacunas(int id_masc,string x)
+{
+	int op,no_id;
+	string auxop,aux;
+	reg = fopen("Servicio.DIR", "rb+");
+	if (reg != NULL)
+	{
+		do
+		{
+			do {
+				system("cls");
+				cout << "Menu de Vacunaciones" << endl;
+				cout << "Servicios      Costo" << endl;
+				cout << "1.-Desparasitaria    50" << endl;
+				cout << "2.-Antibiotica     25" << endl;
+				cout << "3.-Insulina    80" << endl;
+				cout << "4.-Antirrabica      25" << endl;
+				cout << "5.-Vacuna para recien nacido  50" << endl;
+				cout << "6.-Antialergica    25" << endl;
+				cout << "7.-Anestesiante   70" << endl;
+				cout << "8.-Otros    50" << endl;
+				cout << endl << "Digite su opcion:";
+				getline(cin, auxop);
+			} while (Verificar_Numero(auxop) == false);
+			op = stoi(auxop, nullptr, 0);
+			switch (op)
+			{
+			case 1:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 50;
+				serv.Serv = "Desparasitaria";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 2:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 25;
+				serv.Serv = "Antibiotica";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 3:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 80;
+				serv.Serv = "Insulina";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 4:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 25;
+				serv.Serv = "Antirrabica";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 5:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 50;
+				serv.Serv = "Recien Nacido";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 6:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 25;
+				serv.Serv = "Antialergica";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 7:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Anestesiante";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 8:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 50;
+				serv.Serv = "Otros";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			}
+		} while (op != 0);
+	}
+	else
+	{
+
+	}
+	fclose(reg);
+}
+
+//Menu otros servicios
+void Menu_Otros_Servicios(int id_masc,string x)
+{
+	int op,no_id;
+	string auxop,aux;
+	reg = fopen("Servicio.DIR", "rb+");
+	if (reg != NULL)
+	{
+		do
+		{
+			do
+			{
+				system("cls");
+				cout << "Que otro Servicio requiere" << endl;
+				cout << "Servicios      Costos" << endl;
+				cout << "1.-Parto asistido    150" << endl;
+				cout << "2.-Fisioterapia     70" << endl;
+				cout << "3.-Intervencion de embarazo    80" << endl;
+				cout << "4.-Internacion      100" << endl;
+				cout << endl << "Digite su opcion:";
+				getline(cin, auxop);
+			} while (Verificar_Numero(auxop) == false);
+			op = stoi(auxop, nullptr, 0);
+			switch (op)
+			{
+			case 1:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 150;
+				serv.Serv = "Parto Asistido";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 2:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 70;
+				serv.Serv = "Fisioterapia";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 3:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 80;
+				serv.Serv = "Intervencion de Embarazo";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			case 4:
+				do
+				{
+					do {
+
+						cout << "\n\n\n\rInserte el Id del Servicio: ";
+						getline(cin, aux);
+					} while (!Verificar_Numero(aux));
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = no_id * sizeof(serv);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&serv, sizeof(serv), 1, reg);
+				} while (serv.Id_Servicio == no_id);
+				serv.Costo = 100;
+				serv.Serv = "Internacion";
+				serv.Fecha = x;
+				serv.Id_Animal = id_masc;
+				serv.Id_Servicio = no_id;
+				serv.Estado = "A";
+				fwrite(&serv, sizeof(serv), 1, reg);
+				break;
+			}
+		} while (op != 0);
+	}
+	else
+	{
+
+	}
+	fclose(reg);
+}
+
+//Menu de Servicios
+void Menu_Tipo_De_Atencion(int id_Animal, string Fecha)
+{
+	int op;
+	string auxop;
+		do
+		{
+			do
+			{
+				system("cls");
+				cout << "Que Tipo de Atencion desea para su Animal?" << endl;
+				cout << "1.-Medica" << endl;
+			//	cout << "2.-Estetica" << endl;
+			//	cout << "3.-De Accesorios" << endl;
+			//	cout << "4.-Compra de Alimento para su Animal" << endl;
+			//	cout << "5.-Farmaceutica" << endl;
+				cout << "2.-Vacunaciones" << endl;
+				cout << "3.-Otros Servicios" << endl;
+				cout << "0.-Salir";
+				cout << endl << "Digite su opcion: ";
+				getline(cin, auxop);
+			} while (Verificar_Numero(auxop) == false);
+			op = stoi(auxop, nullptr, 0);
+			switch (op)
+			{
+			case 1:
+				system("cls");
+				Menu_Medico(id_Animal,Fecha);
+				break;
+			/*case 2:
+				system("cls");
+				Menu_Estetica(id_Animal, Fecha);
+				break;
+			case 3:
+				cout << "Porfavor pase por mostrador para conocer nuestros accesorios" << endl;
+				break;
+			case 4:
+				system("cls");
+				Menu_Alimento(id_Animal,Fecha);
+				///Faltan Datos para los Alimentos
+				break;
+			case 5:
+				cout << "Porfavor pase por nuestra Farmacia para este procedimiento " << endl;
+				break;
+			*/case 2:
+				system("cls");
+				Menu_Vacunas(id_Animal,Fecha);
+				break;
+			case 3:
+				system("cls");
+				Menu_Otros_Servicios(id_Animal,Fecha);
+				break;
+			}
+			system("cls");
+		} while (op != 0);
+}
+
+//Datos para Animal
+void Datos_Animales(int Cant, int idCliente)
+{
+   string edad, aux,fecha;
+   int no_id=0;
+	fflush(stdin);
+	cout << "Ingrese la Fecha dd/mm/aaaa: ";
+//	do
+//	{
+		getline(cin, fecha);
+//	} while (!Verificar_Fecha(fecha));
+			for (int i = 0; i < Cant; i++)
+			{
+				reg = fopen("Animal.DIR", "rb+");
+				if (reg != NULL)
+				{
+				cout << "Ingrese el Id de la Animal: ";
+				do {
+					do {
+						getline(cin, aux);
+					} while (Verificar_Numero(aux) == false);
+					no_id = stoi(aux, nullptr, 0);
+					dir_fisica = masc.Id_Animal * sizeof(masc);
+					fseek(reg, dir_fisica, SEEK_SET);
+					fread(&masc, sizeof(masc), 1, reg);
+				} while (masc.Id_Animal == no_id);
+				cout << "Ingrese el Nombre de la Animal: " << endl;
+				do
+				{
+					getline(cin, masc.Nombre_Animal);
+				} while (!Verificar_Nombre_Animal(masc.Nombre_Animal));
+				cout << "Ingrese la Edad de la Animal: " << endl;
+				do
+				{
+					getline(cin, edad);
+				} while (!Verificar_Edad_Animal(edad));
+				masc.Edad = stoi(edad, nullptr, 0);
+				cout << "Ingrese la Raza de su Animal: " << endl;
+				do
+				{
+					getline(cin, masc.Raza);
+				} while (!Verificar_Nombre_Animal(masc.Raza));
+				cout << "Ingrese alguna Informacion Medica de Relevancia de la Animal: " << endl;
+				getline(cin, masc.Descripcion);
+				masc.Id_Cliente = idCliente;
+				masc.Id_Animal = no_id;
+				masc.Estado = "A";
+				fwrite(&masc, sizeof(masc), 1, reg);
+				fclose(reg);
+				Menu_Tipo_De_Atencion(masc.Id_Animal,fecha);
+			}
+		else
+		{
+			cout << "El Archivo no pudo abrirse" << endl;
+		}
+	  }	
+}
+
+//Servicios para el cliente
+void Realizar_Servicio(void)
+{
+	int no_id,cant_Animal;  // Variable local para el numero de producto
+	string aux;
+	cout << "Es su primera vez en la Aplicacion? " << endl;
+	cout << "Dijite Y/N " << endl;
+	do
+	{
+		getline(cin, aux);
+	} while ((aux != "Y")&&(aux != "N"));
+	if (aux=="Y")
+	{
+		reg = fopen("Cliente.DIR", "rb+"); // Intenta abrir el archivo PRODUCTO.DIR
+										   // en modo de lectura/escritura
+		if (reg!=NULL)
+		{
+			do
+			{
+				do {
+
+					cout << "\n\n\n\rInserte el Id del Cliente: ";
+					getline(cin, aux);
+				} while (!Verificar_Numero(aux));
+				no_id = stoi(aux, nullptr, 0);
+				dir_fisica = no_id * sizeof(clien); // Calculo de la dir. fisica
+				fseek(reg, dir_fisica, SEEK_SET); //Posicionar el apuntador del archivo
+				fread(&clien, sizeof(clien), 1, reg);
+				// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+			} while (clien.Id_Cliente == no_id);
+
+			cout << "\n\rNombre: ";
+			cin.ignore();
+			do
+			{
+				getline(cin, clien.Nombre);
+			} while (!Verificar_Nombre_Cliente(clien.Nombre));
+			cout << "\n\rApellido: ";
+			do {
+				getline(cin, clien.Apellido);
+			} while (!Verificar_Apellido_Cliente(clien.Apellido));
+
+			cout << "\n\rDireccion de Domicilio: ";
+			getline(cin, clien.Direccion_Domicilio);
+			cout << "\n\rNumero de Telf: ";
+			do
+			{
+				getline(cin, clien.Num_Telf);
+			} while (!Verificar_Numero_Telefono(clien.Num_Telf));
+			clien.Estado = "A";
+			clien.Id_Cliente = no_id;
+			fseek(reg, dir_fisica, SEEK_SET); //Posicionar el apuntador del archivo
+			fwrite(&clien, sizeof(clien), 1, reg); // Grabar el Registro completo
+			fclose(reg); // Cierra el archivo
+			cout << "Ingrese la cantidad de Animales: ";
+			do {
+				do
+				{
+					getline(cin, aux);
+				} while (!Verificar_Numero(aux));
+				 cant_Animal = stoi(aux, nullptr, 0);
+			} while (cant_Animal < 0);
+			Datos_Animales(cant_Animal,clien.Id_Cliente);
+		}
+		else
+		{
+			cout<<endl << "El archivo no pudo abrirse correctamente";
+		}
+	}
+	else
+	{
+		reg = fopen("Cliente.DIR", "rb+");
+		if (reg != NULL)
+		{
+			cout << "Ingrese Su Id_Cliente: ";
+			do
+			{
+				getline(cin, aux);
+			} while (!Verificar_Numero(aux));
+			no_id = stoi(aux, nullptr, 0);
+			dir_fisica = no_id * sizeof(clien);
+			fseek(reg, dir_fisica, SEEK_SET);
+			fread(&clien, sizeof(clien), 1, reg);
+			fclose(reg);
+			if (clien.Estado == "A")
+			{
+
+				Litado_Animal_Cliente(clien.Id_Cliente);
+			}
+			else
+			{
+				cout << "El Cliente No Existe:" << endl;
+			}
+		}
+		else
+		{
+			cout << "Error al abrir el archivo";
+		}
+	}
+}
+//Listado de Animal Cliente 
+void Litado_Animal_Cliente(int x)
+{
+	int no_id;
+	string aux, fecha;
+	Animal masc1;
+	reg = fopen("Animal.DIR", "rb");
+	// en modo de solo lectura
+	if (reg == NULL)
+	{
+		cout << "\n\n\n\rNo existe el archivo !!!";
+		cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+		_getch();
+		return;
+	}
+	cout << "\n\r        Nombre             Raza                 Edad                   Id Animal                      ";
+	cout << "\n\r------------------------------------------------------------------------" << endl;
+	fread(&masc, sizeof(masc), 1, reg);
+	// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+	while (!feof(reg)) // Ciclo mientras no se encuentre el final del archivo
+	{
+		if ((masc.Estado == "A") && (masc.Estado != "") && (masc.Id_Cliente == x))
+			cout << endl << masc.Nombre_Animal << "\t" << masc.Raza << "\t" << masc.Edad << "\t" << masc.Id_Animal;
+		fread(&masc, sizeof(masc), 1, reg);
+	}
+	cout <<endl<< "Igrese el Id de la Animal: ";
+	do
+	{
+		do {
+			getline(cin, aux);
+		} while (!Verificar_Numero(aux));
+		no_id = stoi(aux, nullptr, 0);
+		dir_fisica = no_id * sizeof(masc);
+		fseek(reg, dir_fisica, SEEK_SET);
+		fread(&masc, sizeof(masc), 1, reg);
+		cout << endl << masc1.Id_Animal << endl;
+	} while (no_id != masc.Id_Animal);
+	fclose(reg);
+	cout << "Ingrese la Fecha dd/mm/aaaa: ";
+	do
+	{
+		getline(cin, fecha);
+	} while (!Verificar_Fecha(fecha));
+	Menu_Tipo_De_Atencion(no_id, fecha);
+}
+
+//Listado Secuencial id Animales
+void Lista_Secuencial_idAnimales(void)
+{
+	reg = fopen("Animal.DIR", "rb"); // Intenta abrir el archivo PRODUCTO.DIR
+									  // en modo de solo lectura
+	if (reg == NULL)
+	{
+		cout << "\n\n\n\rNo tiene animales registrados !!!";
+		cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+		_getch();
+		return;
+	}
+	fread(&masc, sizeof(masc), 1, reg);
+	// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+	while (!feof(reg)) // Ciclo mientras no se encuentre el final del archivo
+	{
+		if ((masc.Estado == "A") && (masc.Estado != ""))
+			cout << endl << masc.Id_Animal<< " - \t" <<  masc.Nombre_Animal ;
+		fread(&masc, sizeof(masc), 1, reg);
+	}
+	fclose(reg); // Cierra el archivo
+	cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+	_getch();
+	return;
+}
+
+
+//Listado Secuencial para Animal
+void Lista_Secuencial_Animal(void)
+{
+	cout << "\n\rLISTADO DE REGISTROS DE PRODUCTOS";
+	reg = fopen("Animal.DIR", "rb"); // Intenta abrir el archivo PRODUCTO.DIR
+									  // en modo de solo lectura
+	if (reg == NULL)
+	{
+		cout << "\n\n\n\rNo existe el archivo !!!";
+		cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+		_getch();
+		return;
+	}
+	cout << "\n\r        Nombre             Raza                 Edad                   Id Animal                      ";
+	cout << "\n\r------------------------------------------------------------------------" << endl;
+	fread(&masc, sizeof(masc), 1, reg);
+	// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+	while (!feof(reg)) // Ciclo mientras no se encuentre el final del archivo
+	{
+		if ((masc.Estado == "A") && (masc.Estado != ""))
+			cout << endl << masc.Nombre_Animal << "\t" << masc.Raza<< "\t" << masc.Edad << "\t" << masc.Id_Animal;
+		fread(&masc, sizeof(masc), 1, reg);
+	}
+	fclose(reg); // Cierra el archivo
+	cout << "\n\r------------------------------------------------------------------------";
+	cout << "\n\rFin del listado !!!";
+	cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+	_getch();
+	return;
+}
+
+//Listado Secuencial para cliente
+void Lista_Secuencial_Cliente(void)
+{
+	cout << "\n\rLISTADO DE REGISTROS DE PRODUCTOS";
+	reg = fopen("Cliente.DIR", "rb"); // Intenta abrir el archivo PRODUCTO.DIR
+										 // en modo de solo lectura
+	if (reg == NULL)
+	{
+		cout << "\n\n\n\rNo existe el archivo !!!";
+		cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+		_getch();
+		return;
+	}
+	cout << "\n\r        Nombre             Apellido               Id Cliente                      ";
+	cout << "\n\r------------------------------------------------------------------------" << endl;
+	fread(&clien, sizeof(clien), 1, reg);
+	// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+	while (!feof(reg)) // Ciclo mientras no se encuentre el final del archivo
+	{
+		if ((clien.Estado=="A") && (clien.Estado!=""))
+			cout << endl << clien.Nombre << "\t" << clien.Apellido<< "\t" << clien.Id_Cliente;
+		fread(&clien, sizeof(clien), 1, reg);
+	}
+	fclose(reg); // Cierra el archivo
+	cout << "\n\r------------------------------------------------------------------------";
+	cout << "\n\rFin del listado !!!";
+	cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+	_getch();
+	return;
+}
+
+//Listado Secuencial para cliente
+void Lista_Secuencial_Servicios(void)
+{
+	cout << "\n\rLISTADO DE REGISTROS DE PRODUCTOS";
+	reg = fopen("Servicio.DIR", "rb"); // Intenta abrir el archivo PRODUCTO.DIR
+									  // en modo de solo lectura
+	if (reg == NULL)
+	{
+		cout << "\n\n\n\rNo existe el archivo !!!";
+		cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+		_getch();
+		return;
+	}
+	cout << "\n\r        Servicios             Costo               Id Servicio        Id Mascot                Fecha ";
+	cout << "\n\r------------------------------------------------------------------------" << endl;
+	fread(&serv, sizeof(serv), 1, reg);
+	// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+	while (!feof(reg)) // Ciclo mientras no se encuentre el final del archivo
+	{
+		if ((serv.Estado == "A") && (serv.Estado != ""))
+			cout << endl << serv.Serv << "\t" << serv.Costo << "\t" << serv.Id_Servicio << "\t" << serv.Id_Animal<< "\t" << serv.Fecha;
+		fread(&serv, sizeof(serv), 1, reg);
+	}
+	fclose(reg); // Cierra el archivo
+	cout << "\n\r------------------------------------------------------------------------";
+	cout << "\n\rFin del listado !!!";
+	cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+	_getch();
+	return;
+}
+/*
+void CONSULTA_DIRECTA(void)
+{
+int no_prod; // Variable local para el numero de producto que desea consultar
+
+cout << "\n\rCONSULTA DE REGISTROS DE PRODUCTOS";
+alias = fopen("PRODUCTO.DIR", "rb"); // Intenta abrir el archivo PRODUCTO.DIR
+// en modo de solo lectura
+if (alias == NULL)
+{
+cout << "\n\n\n\rNo existe el archivo !!!";
+cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+_getch();
+return;
+}
+
+cout << "\n\n\n\rNumero de producto: "; cin >> no_prod;
+
+dir_fisica = no_prod * sizeof(Registro); // Calculo de la dir. fisica
+fseek(alias, dir_fisica, SEEK_SET); //Posicionar el apuntador del archivo
+fread(&Registro, sizeof(Registro), 1, alias);
+// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+if ((Registro.no_prod == no_prod) && (Registro.estado != 9))
+{
+cout << "\n\rNo Prod                    Descripcion  Cantidad        Precio  Garantia";
+cout << "\n\r------------------------------------------------------------------------";
+printf("\n\r%3d\t%30s\t%3d\t\t$%4.2f\t%c", Registro.no_prod, Registro.descrip, Registro.cantidad, Registro.precio, Registro.garantia);
+}
+else
+{
+cout << "\n\n\n\rNo existe ese registro !!!";
+}
+fclose(alias);
+cout << "\n\n\n\n\r<<< Oprima cualquier tecla para continuar >>>";
+_getch();
+return;
+}
+
+void MODIFICACION_DIRECTA(void)
+{
+int no_prod; // Variable local para el numero de producto que desea modificar
+
+cout << "\n\rMODIFICACION DE REGISTROS DE PRODUCTOS";
+alias = fopen("PRODUCTO.DIR", "rb+"); // Intenta abrir el archivo PRODUCTO.DIR
+// en modo de lectura/escritura
+if (alias == NULL)  // Valida la existencia del archivo
+{
+cout << "\n\n\n\rNo existe el archivo !!!";
+cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+_getch();
+return;
+}
+
+cout << "\n\n\n\rNumero de producto: "; cin >> no_prod;
+
+dir_fisica = no_prod * sizeof(Registro); // Calculo de la dir. fisica
+fseek(alias, dir_fisica, SEEK_SET); //Posicionar el apuntador del archivo
+fread(&Registro, sizeof(Registro), 1, alias);
+// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+if ((Registro.no_prod == no_prod) && (Registro.estado != 9))
+{
+cout << "\n\r          No Prod                    Descripcion             Cantidad              Precio                          Garantia";
+cout << "\n\r---------------------------------------------------------------------------------------------------------------------------------------";
+cout << endl << Registro.no_prod << Registro.descrip << Registro.cantidad << Registro.precio << Registro.garantia;
+
+cout << "\n\n\n\rAnote los nuevos datos ...";
+cout << "\n\rDescripcion: ";
+cin.ignore();
+getline(cin, Registro.descrip);
+cout << "\n\rCantidad   : "; cin >> Registro.cantidad;
+cout << "\n\rPrecio     : "; cin >> Registro.precio;
+do
+{
+cout << "\n\rGarantia   : "; Registro.garantia = toupper(_getche());
+} while (Registro.garantia != 'S' && Registro.garantia != 'N');
+
+// Es necesario reposicionar el apuntador del archivo al principio del
+// registro que desea modificar, ya que al leer un registro, el
+// apuntador se posiciona en el registro siguiente
+// La funcion ftell(alias) devuelve la posicion donde se encuentra el
+// apuntador
+fseek(alias, dir_fisica, SEEK_SET); //Posicionar el apuntador del archivo
+fwrite(&Registro, sizeof(Registro), 1, alias);  // Graba el registro con
+// los nuevos campos
+fclose(alias);   // Cierra el archivo
+cout << "\n\n\n\rRegistro modificado !!!";
+cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+_getch();
+return;
+}
+else
+{
+cout << "\n\n\n\rNo se encuentra ese registro !!!";
+}
+fclose(alias); // Cierra el archivo
+cout << "\n\n\n\n\r<<< Oprima cualquier tecla para continuar >>>";
+_getch();
+return;
+}
+
+void BAJA_LOGICA_DIRECTA(void)
+{
+int no_prod; // Variable local para el numero de producto que desea eliminar
+char op;
+
+cout << "\n\rBAJA LOGICA DE REGISTROS DE PRODUCTOS";
+alias = fopen("PRODUCTO.DIR", "rb+"); // Intenta abrir el archivo PRODUCTO.DIR
+// en modo de lectura/escritura
+if (alias == NULL)  // Valida la existencia del archivo
+{
+cout << "\n\n\n\rNo existe el archivo !!!";
+cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+_getch();
+return;
+}
+
+cout << "\n\n\n\rNumero de producto: "; cin >> no_prod;
+
+dir_fisica = no_prod * sizeof(Registro); // Calculo de la dir. fisica
+fseek(alias, dir_fisica, SEEK_SET); //Posicionar el apuntador del archivo
+fread(&Registro, sizeof(Registro), 1, alias);
+// Lee el "Registro", de tamano=sizeof(Registro) del archivo "alias"
+if (Registro.no_prod == no_prod)
+{
+cout << "\n\r         No Prod                Descripcion            Cantidad                   Precio                      Garantia";
+cout << "\n\r------------------------------------------------------------------------------------------------------------------------------------";
+cout << endl << Registro.no_prod << Registro.descrip << Registro.cantidad << Registro.precio << Registro.garantia;
+// registro que desea modificar, ya que al leer un registro, el
+// apuntador se posiciona en el registro siguiente
+// La funcion ftell(alias) devuelve la posicion donde se encuentra el
+// apuntador
+do
+{
+cout << "\n\rEsta seguro que desea eliminar este registro? [S/N] ---> ";
+op = toupper(_getche());
+} while (op != 'S' && op != 'N');
+if (op == 'S')
+{
+Registro.estado = 9;
+fseek(alias, dir_fisica, SEEK_SET); //Posicionar el apuntador del archivo
+fwrite(&Registro, sizeof(Registro), 1, alias);  // Graba el registro con
+// los nuevos campos
+cout << "\n\n\n\rRegistro eliminado logicamente !!!";
+}
+else
+{
+cout << "\n\n\n\rRegistro NO eliminado !!!";
+}
+fclose(alias);   // Cierra el archivo
+cout << "\n\r<<< Oprima cualquier tecla para continuar >>>";
+_getch();
+return;
+}
+else
+{
+cout << "\n\n\n\rNo se encuentra ese registro !!!";
+}
+fclose(alias); // Cierra el archivo
+cout << "\n\n\n\n\r<<< Oprima cualquier tecla para continuar >>>";
+_getch();
+return;
+}
+*/
+
+
+
